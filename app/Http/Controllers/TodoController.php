@@ -17,7 +17,7 @@ class TodoController extends Controller
         $user = auth()->user();
 
         $todos = Todo::where('user_id', $user->id)->get();
-        $ativas = Todo::where('is_complete', '==', '1')->get();
+        //$ativas = Todo::where('is_complete', '==', '1')->get();
         return view('dashboard', compact('user', 'todos', 'ativas'));
     }
 
@@ -83,6 +83,7 @@ class TodoController extends Controller
     public function destroy(Todo $todo)
     {
         try {
+            $user = auth()->user();
             // Verificar se TODO é do usuário
             if ($todo->user_id !== $user->id) {
                 return response('', 403);
@@ -95,5 +96,36 @@ class TodoController extends Controller
         }
 
         return redirect('/dashboard')->with('success', 'TODO deletado com sucesso');
+    }
+
+    public function edit($id)
+    {
+        $todo = Todo::find($id);
+        $user = auth()->user();
+        // Verificar se TODO é do usuário
+        if ($todo->user_id !== $user->id) {
+            return response('', 403);
+        }
+
+        return view('edit', compact('todo'));
+        
+    }
+
+    public function update($id, Request $request)
+    {
+        $todo = Todo::find($id);
+        $user = auth()->user();
+        
+        if ($todo->user_id !== $user->id) {
+            return response('', 403);
+        }
+
+        $todo->update([
+            'title' => $request->title,
+            'color' => $request->color
+        ]);
+
+        return redirect('/dashboard');
+
     }
 }
