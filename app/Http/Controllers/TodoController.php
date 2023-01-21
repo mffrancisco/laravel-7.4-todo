@@ -18,7 +18,7 @@ class TodoController extends Controller
 
         $todos = Todo::where('user_id', $user->id)->get();
         //$ativas = Todo::where('is_complete', '==', '1')->get();
-        return view('dashboard', compact('user', 'todos', 'ativas'));
+        return view('dashboard', compact('user', 'todos'));
     }
 
     /**
