@@ -29,6 +29,7 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
+        logger()->debug('Request', [$request->color]);
         try {
             $user = auth()->user();
 
@@ -104,7 +105,7 @@ class TodoController extends Controller
         $user = auth()->user();
         // Verificar se TODO é do usuário
         if ($todo->user_id !== $user->id) {
-            return response('', 403);
+            return response('', 404);
         }
 
         return view('edit', compact('todo'));
